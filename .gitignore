@@ -216,3 +216,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project datasets
+data/processed/
+data/interim/
+
+# ML experiment artifacts
+mlruns/
+
+# OS files
+.DS_Store
