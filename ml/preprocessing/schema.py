@@ -6,7 +6,7 @@ EXPECTED_COLUMNS = {
     "Origin_Country": "object",
     "Destination_Country": "object",
     "Destination_Port": "object",
-    "HS_Code": "int64",
+    "HS_Code": "object",
     "Importer_ID": "object",
     "Exporter_ID": "object",
     "Declared_Value": "float64",
