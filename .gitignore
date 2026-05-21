@@ -260,3 +260,15 @@ outputs/temp/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# ML outputs
+outputs/models/
+outputs/plots/
+outputs/reports/
+outputs/metrics/
+
+# MLflow tracking
+mlruns/
+
+# Large processed datasets
+data/processed/
