@@ -226,3 +226,37 @@ mlruns/
 
 # OS files
 .DS_Store
+
+# =========================
+# ML / MLOps Outputs
+# =========================
+
+# Trained models
+outputs/models/
+
+# Serialized artifacts
+outputs/artifacts/
+
+# MLflow experiment tracking
+mlruns/
+
+# CatBoost training info
+catboost_info/
+
+# Python model artifacts
+*.pkl
+*.joblib
+*.cbm
+
+# SHAP cached artifacts
+*.shap
+
+# Large generated files
+*.parquet
+
+# Temporary evaluation outputs
+outputs/temp/
+
+# OS generated files
+.DS_Store
+Thumbs.db
