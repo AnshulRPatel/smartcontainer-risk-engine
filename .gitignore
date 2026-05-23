@@ -273,3 +273,19 @@ mlruns/
 
 # Large processed datasets
 data/processed/
+
+# Streamlit cache
+.streamlit/
+
+# Dashboard artifacts
+outputs/
+
+# MLflow
+mlruns/
+
+# Processed data
+data/processed/
+
+# Python cache
+__pycache__/
+*.pyc
