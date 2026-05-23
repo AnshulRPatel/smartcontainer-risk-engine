@@ -266,6 +266,7 @@ outputs/models/
 outputs/plots/
 outputs/reports/
 outputs/metrics/
+outputs/
 
 # MLflow tracking
 mlruns/
