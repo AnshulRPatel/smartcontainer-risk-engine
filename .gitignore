@@ -289,3 +289,24 @@ data/processed/
 # Python cache
 __pycache__/
 *.pyc
+
+catboost_info/
+
+# FastAPI
+*.log
+
+# CatBoost
+catboost_info/
+
+# MLflow
+mlruns/
+
+# Outputs
+outputs/
+
+# Processed data
+data/processed/
+
+# Cache
+__pycache__/
+*.pyc

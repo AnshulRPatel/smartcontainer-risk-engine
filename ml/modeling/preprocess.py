@@ -1,5 +1,5 @@
 import pandas as pd
-
+import numpy as np
 from sklearn.model_selection import (
     train_test_split
 )
@@ -248,3 +248,224 @@ def prepare_training_data(
 
         features
     )
+
+def prepare_inference_data(df):
+
+    inference_df = df.copy()
+
+    # =========================
+    # DATETIME PROCESSING
+    # =========================
+
+    inference_df[
+        "Declaration_Date"
+    ] = pd.to_datetime(
+
+        inference_df[
+            "Declaration_Date"
+        ],
+
+        errors="coerce"
+    )
+
+    inference_df[
+        "Declaration_Hour"
+    ] = (
+
+        pd.to_datetime(
+
+            inference_df[
+                "Declaration_Time"
+            ],
+
+            format="%H:%M:%S",
+
+            errors="coerce"
+        )
+
+        .dt.hour
+    )
+
+    inference_df[
+        "Declaration_Weekday"
+    ] = (
+
+        inference_df[
+            "Declaration_Date"
+        ]
+        .dt.weekday
+    )
+
+    inference_df[
+        "Is_Night_Declaration"
+    ] = (
+
+        inference_df[
+            "Declaration_Hour"
+        ]
+        .between(0, 5)
+
+    ).astype(int)
+
+    # =========================
+    # WEIGHT FEATURES
+    # =========================
+
+    inference_df[
+        "Weight_Difference"
+    ] = (
+
+        inference_df[
+            "Measured_Weight"
+        ]
+
+        -
+
+        inference_df[
+            "Declared_Weight"
+        ]
+    )
+
+    inference_df[
+        "Weight_Difference_Percent"
+    ] = (
+
+        inference_df[
+            "Weight_Difference"
+        ]
+
+        /
+
+        (
+            inference_df[
+                "Declared_Weight"
+            ] + 1
+        )
+    ) * 100
+
+    # =========================
+    # VALUE FEATURES
+    # =========================
+
+    inference_df[
+        "Value_Per_Weight"
+    ] = (
+
+        inference_df[
+            "Declared_Value"
+        ]
+
+        /
+
+        (
+            inference_df[
+                "Declared_Weight"
+            ] + 1
+        )
+    )
+
+    inference_df[
+        "Log_Declared_Value"
+    ] = np.log(
+
+        inference_df[
+            "Declared_Value"
+        ] + 1
+    )
+
+    inference_df[
+        "was_zero_declared_weight"
+    ] = (
+
+        inference_df[
+            "Declared_Weight"
+        ] == 0
+    ).astype(int)
+
+    # =========================
+    # HS CHAPTER
+    # =========================
+
+    inference_df[
+        "HS_Chapter"
+    ] = (
+
+        inference_df[
+            "HS_Code"
+        ]
+        .astype(str)
+        .str[:2]
+    )
+
+    # =========================
+    # PLACEHOLDER FEATURES
+    # =========================
+
+    inference_df[
+        "Anomaly_Score"
+    ] = 0.0
+
+    inference_df[
+        "High_Weight_Anomaly"
+    ] = (
+
+        inference_df[
+            "Weight_Difference_Percent"
+        ].abs() > 30
+
+    ).astype(int)
+
+    inference_df[
+        "Excessive_Dwell_Flag"
+    ] = (
+
+        inference_df[
+            "Dwell_Time_Hours"
+        ] > 72
+
+    ).astype(int)
+
+    inference_df[
+        "Exporter_Shipment_Count"
+    ] = 1
+
+    inference_df[
+        "Shipping_Line_Frequency"
+    ] = 1
+
+    # =========================
+    # BUILD FINAL FEATURE SET
+    # =========================
+
+    features = FEATURE_COLUMNS
+
+    if ENABLE_CORRELATION_PRUNING:
+
+        features = [
+
+            col
+
+            for col in features
+
+            if col in inference_df.columns
+        ]
+
+    final_df = inference_df[
+        features
+    ].copy()
+
+    # =========================
+    # CATEGORICAL TYPES
+    # =========================
+
+    for col in CATEGORICAL_FEATURES:
+
+        if col in final_df.columns:
+
+            final_df[col] = (
+
+                final_df[col]
+                .astype(str)
+            )
+
+    return final_df
