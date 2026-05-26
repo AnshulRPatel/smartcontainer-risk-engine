@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+
 from sklearn.model_selection import (
     train_test_split
 )
@@ -24,13 +25,15 @@ from ml.modeling.config import (
 )
 
 
+# =========================================================
+# BASE FEATURES
+# =========================================================
+
 BASE_FEATURES = [
 
     "Declared_Value",
 
     "Declared_Weight",
-
-    
 
     "Dwell_Time_Hours",
 
@@ -42,11 +45,7 @@ BASE_FEATURES = [
 
     "was_zero_declared_weight",
 
-    
-
     "Trade_Regime",
-
-    
 
     "Destination_Country",
 
@@ -58,9 +57,11 @@ BASE_FEATURES = [
 ]
 
 
-ANOMALY_FEATURES = [
+# =========================================================
+# ANOMALY FEATURES
+# =========================================================
 
-    
+ANOMALY_FEATURES = [
 
     "Anomaly_Score",
 
@@ -70,9 +71,11 @@ ANOMALY_FEATURES = [
 ]
 
 
-BEHAVIORAL_FEATURES = [
+# =========================================================
+# BEHAVIORAL FEATURES
+# =========================================================
 
-    
+BEHAVIORAL_FEATURES = [
 
     "Exporter_Shipment_Count",
 
@@ -80,25 +83,33 @@ BEHAVIORAL_FEATURES = [
 ]
 
 
+# =========================================================
+# TEMPORAL FEATURES
+# =========================================================
+
 TEMPORAL_FEATURES = [
 
     "Declaration_Weekday",
 
     "Declaration_Hour",
 
-    
-
     "Is_Night_Declaration"
 ]
 
 
+# =========================================================
+# LOG FEATURES
+# =========================================================
+
 LOG_FEATURES = [
 
     "Log_Declared_Value"
-
-    
 ]
 
+
+# =========================================================
+# CATEGORICAL FEATURES
+# =========================================================
 
 CATEGORICAL_FEATURES = [
 
@@ -115,6 +126,10 @@ CATEGORICAL_FEATURES = [
     "HS_Chapter"
 ]
 
+
+# =========================================================
+# BUILD FEATURE LIST
+# =========================================================
 
 def build_feature_list():
 
@@ -150,6 +165,10 @@ def build_feature_list():
 FEATURE_COLUMNS = build_feature_list()
 
 
+# =========================================================
+# CORRELATION PRUNING
+# =========================================================
+
 def remove_correlated_features(df):
 
     numeric_df = (
@@ -161,8 +180,8 @@ def remove_correlated_features(df):
 
     upper_triangle = corr_matrix.where(
 
-        pd.np.triu(
-            pd.np.ones(
+        np.triu(
+            np.ones(
                 corr_matrix.shape
             ),
             k=1
@@ -192,6 +211,10 @@ def remove_correlated_features(df):
 
     return filtered_features
 
+
+# =========================================================
+# TRAINING DATA PREPARATION
+# =========================================================
 
 def prepare_training_data(
     df,
@@ -249,13 +272,23 @@ def prepare_training_data(
         features
     )
 
-def prepare_inference_data(df):
+
+# =========================================================
+# INFERENCE DATA PREPARATION
+# =========================================================
+
+def prepare_inference_data(
+
+    df,
+
+    context_service=None
+):
 
     inference_df = df.copy()
 
-    # =========================
-    # DATETIME PROCESSING
-    # =========================
+    # =====================================================
+    # DATETIME FEATURES
+    # =====================================================
 
     inference_df[
         "Declaration_Date"
@@ -297,19 +330,39 @@ def prepare_inference_data(df):
     )
 
     inference_df[
-        "Is_Night_Declaration"
+    "Is_Night_Declaration"
     ] = (
 
-        inference_df[
-            "Declaration_Hour"
-        ]
-        .between(0, 5)
+        (
+            inference_df[
+                "Declaration_Hour"
+            ] < 6
+        )
+
+        |
+
+        (
+            inference_df[
+                "Declaration_Hour"
+            ] > 22
+        )
 
     ).astype(int)
 
-    # =========================
+    print("\n========== TEMPORAL DEBUG ==========\n")
+
+    print(
+        inference_df[
+            [
+                "Declaration_Hour",
+                "Is_Night_Declaration"
+            ]
+        ]
+    )
+
+    # =====================================================
     # WEIGHT FEATURES
-    # =========================
+    # =====================================================
 
     inference_df[
         "Weight_Difference"
@@ -336,16 +389,16 @@ def prepare_inference_data(df):
 
         /
 
-        (
+        
             inference_df[
                 "Declared_Weight"
-            ] + 1
-        )
+            ].replace(0,1)
+        
     ) * 100
 
-    # =========================
+    # =====================================================
     # VALUE FEATURES
-    # =========================
+    # =====================================================
 
     inference_df[
         "Value_Per_Weight"
@@ -357,11 +410,11 @@ def prepare_inference_data(df):
 
         /
 
-        (
+        
             inference_df[
                 "Declared_Weight"
-            ] + 1
-        )
+            ].replace(0,1)
+        
     )
 
     inference_df[
@@ -374,17 +427,37 @@ def prepare_inference_data(df):
     )
 
     inference_df[
+        "Log_Declared_Weight"
+    ] = np.log(
+
+        inference_df[
+            "Declared_Weight"
+        ] + 1
+    )
+
+    inference_df[
         "was_zero_declared_weight"
     ] = (
 
         inference_df[
             "Declared_Weight"
         ] == 0
+
     ).astype(int)
 
-    # =========================
+    inference_df[
+        "was_zero_declared_value"
+    ] = (
+
+        inference_df[
+            "Declared_Value"
+        ] == 0
+
+    ).astype(int)
+
+    # =====================================================
     # HS CHAPTER
-    # =========================
+    # =====================================================
 
     inference_df[
         "HS_Chapter"
@@ -397,13 +470,129 @@ def prepare_inference_data(df):
         .str[:2]
     )
 
-    # =========================
-    # PLACEHOLDER FEATURES
-    # =========================
+    # =====================================================
+    # CONTEXTUAL ANOMALY FEATURES
+    # =====================================================
+
+    anomaly_score = 0.0
+
+    if context_service:
+
+        try:
+
+            anomaly_input = pd.DataFrame({
+
+                "Weight_Difference_Percent": [
+
+                    inference_df[
+                        "Weight_Difference_Percent"
+                    ].iloc[0]
+                ],
+
+                "Value_Per_Weight": [
+
+                    inference_df[
+                        "Value_Per_Weight"
+                    ].iloc[0]
+                ],
+
+                "Dwell_Time_Hours": [
+
+                    inference_df[
+                        "Dwell_Time_Hours"
+                    ].iloc[0]
+                ],
+
+                "Importer_Shipment_Count": [
+
+                    context_service
+                    .get_importer_shipment_count(
+
+                        inference_df[
+                            "Importer_ID"
+                        ].iloc[0]
+                    )
+                ],
+
+                "Exporter_Shipment_Count": [
+
+                    context_service
+                    .get_exporter_shipment_count(
+
+                            inference_df[
+                            "Exporter_ID"
+                        ].iloc[0]
+                    )
+                ],
+
+                "Shipping_Line_Frequency": [
+
+                    context_service
+                    .get_shipping_line_frequency(
+
+                            inference_df[
+                            "Shipping_Line"
+                        ].iloc[0]
+                    )
+                ],
+
+                "Declaration_Hour": [
+
+                    inference_df[
+                        "Declaration_Hour"
+                    ].iloc[0]
+                ],
+                
+                "was_zero_declared_weight": [
+
+                    inference_df[
+                        "was_zero_declared_weight"
+                    ].iloc[0]
+                ],
+
+                "was_zero_declared_value": [
+
+                    inference_df[
+                        "was_zero_declared_value"
+                    ].iloc[0]
+                ],
+
+                "Log_Declared_Value": [
+
+                    inference_df[
+                        "Log_Declared_Value"
+                    ].iloc[0]
+                ],
+
+                "Log_Declared_Weight": [
+
+                    inference_df[
+                        "Log_Declared_Weight"
+                    ].iloc[0]
+                ]
+            })
+
+            anomaly_score = (
+
+                context_service
+                .anomaly_service
+                .predict_anomaly_score(
+
+                    anomaly_input
+                )
+            )
+
+        except Exception:
+
+            anomaly_score = 0.0
 
     inference_df[
         "Anomaly_Score"
-    ] = 0.0
+    ] = anomaly_score
+
+    # =====================================================
+    # RULE FLAGS
+    # =====================================================
 
     inference_df[
         "High_Weight_Anomaly"
@@ -411,7 +600,7 @@ def prepare_inference_data(df):
 
         inference_df[
             "Weight_Difference_Percent"
-        ].abs() > 30
+        ].abs() > 20
 
     ).astype(int)
 
@@ -425,17 +614,55 @@ def prepare_inference_data(df):
 
     ).astype(int)
 
+    # =====================================================
+    # CONTEXTUAL BEHAVIORAL FEATURES
+    # =====================================================
+
+    if context_service:
+
+        exporter_count = (
+
+            context_service
+            .get_exporter_shipment_count(
+
+                inference_df[
+                    "Exporter_ID"
+                ].iloc[0]
+            )
+        )
+
+    else:
+
+        exporter_count = 1
+
     inference_df[
         "Exporter_Shipment_Count"
-    ] = 1
+    ] = exporter_count
+
+    if context_service:
+
+        shipping_freq = (
+
+            context_service
+            .get_shipping_line_frequency(
+
+                inference_df[
+                    "Shipping_Line"
+                ].iloc[0]
+            )
+        )
+
+    else:
+
+        shipping_freq = 1
 
     inference_df[
         "Shipping_Line_Frequency"
-    ] = 1
+    ] = shipping_freq
 
-    # =========================
-    # BUILD FINAL FEATURE SET
-    # =========================
+    # =====================================================
+    # BUILD FINAL FEATURE MATRIX
+    # =====================================================
 
     features = FEATURE_COLUMNS
 
@@ -454,9 +681,9 @@ def prepare_inference_data(df):
         features
     ].copy()
 
-    # =========================
-    # CATEGORICAL TYPES
-    # =========================
+    # =====================================================
+    # CATEGORICAL TYPE CASTING
+    # =====================================================
 
     for col in CATEGORICAL_FEATURES:
 

@@ -310,3 +310,20 @@ data/processed/
 # Cache
 __pycache__/
 *.pyc
+
+# Python
+__pycache__/
+*.pyc
+
+# Virtual Environment
+venv/
+
+# MLflow
+mlruns/
+
+# Outputs
+outputs/
+
+# OS
+.DS_Store
+Thumbs.db

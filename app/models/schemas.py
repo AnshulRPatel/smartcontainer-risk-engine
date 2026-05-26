@@ -40,6 +40,10 @@ class PredictionResponse(BaseModel):
 
     predicted_risk: str
 
+    risk_label: str
+
+    model_confidence: float
+
     risk_score: float
 
     anomaly_score: float

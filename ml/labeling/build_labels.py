@@ -18,6 +18,9 @@ from ml.labeling.pseudo_labels import (
     generate_pseudo_labels
 )
 
+from ml.labeling.save_thresholds import (
+    save_risk_thresholds
+)
 
 def build_label_pipeline(df):
 
@@ -41,6 +44,41 @@ def build_label_pipeline(df):
 
     print("Applying route risk scoring...")
     df = add_route_risk(df)
+
+    # =====================================================
+    # SAVE TRAINING THRESHOLDS
+    # =====================================================
+
+    value_threshold_95 = (
+        df["Declared_Value"]
+        .quantile(0.95)
+    )
+
+    value_threshold_99 = (
+        df["Declared_Value"]
+        .quantile(0.99)
+    )
+
+    dwell_threshold_95 = (
+        df["Dwell_Time_Hours"]
+        .quantile(0.95)
+    )
+
+    importer_threshold_10 = (
+        df["Importer_Shipment_Count"]
+        .quantile(0.10)
+    )
+
+    save_risk_thresholds(
+
+        value_threshold_95,
+
+        value_threshold_99,
+
+        dwell_threshold_95,
+
+        importer_threshold_10
+    )
 
     print("Computing hybrid weighted risk score...")
     df = compute_total_risk_score(df)

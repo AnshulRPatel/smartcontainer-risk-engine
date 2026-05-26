@@ -35,31 +35,43 @@ def predict_risk(
 
     return {
 
-        "container_id": (
-            shipment.Container_ID
-        ),
+    "container_id": (
+        shipment.Container_ID
+    ),
 
-        "predicted_risk": (
-            result[
-                "predicted_risk"
-            ]
-        ),
+    "predicted_risk": (
+        result[
+            "predicted_risk"
+        ]
+    ),
 
-        "risk_score": (
-            result[
-                "risk_score"
-            ]
-        ),
+    "risk_label": (
+        result[
+            "risk_label"
+        ]
+    ),
 
-        "anomaly_score": (
-            result[
-                "anomaly_score"
-            ]
-        ),
+    "model_confidence": (
+        result[
+            "model_confidence"
+        ]
+    ),
 
-        "explanation": (
-            result[
-                "explanation"
-            ]
-        )
-    }
+    "risk_score": (
+        result[
+            "risk_score"
+        ]
+    ),
+
+    "anomaly_score": (
+        result[
+            "anomaly_score"
+        ]
+    ),
+
+    "explanation": (
+        result[
+            "explanation"
+        ]
+    )
+}

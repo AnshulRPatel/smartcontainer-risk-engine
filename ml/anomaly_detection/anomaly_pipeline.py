@@ -1,9 +1,14 @@
+import joblib
 import pandas as pd
 
 from ml.anomaly_detection.isolation_forest import (
     train_isolation_forest
 )
 
+
+# =========================================================
+# FEATURES USED FOR ANOMALY DETECTION
+# =========================================================
 
 ANOMALY_FEATURES = [
 
@@ -31,47 +36,115 @@ ANOMALY_FEATURES = [
 ]
 
 
+# =========================================================
+# BUILD ANOMALY PIPELINE
+# =========================================================
+
 def build_anomaly_pipeline(df):
 
     df, model = train_isolation_forest(
+
         df,
+
         ANOMALY_FEATURES
     )
 
     return df, model
 
 
+# =========================================================
+# MAIN EXECUTION
+# =========================================================
+
 if __name__ == "__main__":
 
-    print("Loading labeled shipment dataset...")
+    print(
+        "Loading labeled shipment dataset..."
+    )
 
     df = pd.read_csv(
         "data/processed/labeled_shipments.csv"
     )
 
-    print(f"Dataset Shape: {df.shape}")
+    print(
+        f"Dataset Shape: {df.shape}"
+    )
+
+    # =====================================================
+    # TRAIN ANOMALY MODEL
+    # =====================================================
 
     df, model = build_anomaly_pipeline(df)
 
-    print("\nAnomaly Flag Distribution:\n")
+    # =====================================================
+    # SAVE TRAINED MODEL
+    # =====================================================
+
+    joblib.dump(
+
+        model,
+
+        "outputs/models/isolation_forest.pkl"
+    )
+
+    print(
+        "\nIsolation Forest model saved:"
+    )
+
+    print(
+        "outputs/models/isolation_forest.pkl"
+    )
+
+    # =====================================================
+    # ANOMALY DISTRIBUTION
+    # =====================================================
+
+    print(
+        "\nAnomaly Flag Distribution:\n"
+    )
 
     print(
         df["Anomaly_Flag"]
         .value_counts()
     )
 
-    print("\nCross-tabulation with Risk Labels:\n")
+    # =====================================================
+    # CROSS TAB
+    # =====================================================
 
     print(
+        "\nCross-tabulation with Risk Labels:\n"
+    )
+
+    print(
+
         pd.crosstab(
+
             df["Risk_Label"],
+
             df["Anomaly_Flag"]
         )
     )
 
+    # =====================================================
+    # SAVE OUTPUT DATASET
+    # =====================================================
+
     df.to_csv(
+
         "data/processed/anomaly_shipments.csv",
+
         index=False
     )
 
-    print("\nAnomaly detection complete.")
+    print(
+        "\nProcessed anomaly dataset saved:"
+    )
+
+    print(
+        "data/processed/anomaly_shipments.csv"
+    )
+
+    print(
+        "\nAnomaly detection complete."
+    )
