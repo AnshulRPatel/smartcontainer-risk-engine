@@ -4,13 +4,16 @@ from app.models.schemas import (
 
     ShipmentInput,
 
-    PredictionResponse
+    PredictionResponse,
+
+    BatchPredictionResponse
 )
 
 from app.services.model_service import (
     model_service
 )
 
+from typing import List
 
 router = APIRouter()
 
@@ -29,7 +32,7 @@ def predict_risk(
     result = (
 
         model_service.predict(
-            shipment.dict()
+            shipment.model_dump()
         )
     )
 
@@ -75,3 +78,57 @@ def predict_risk(
         ]
     )
 }
+
+@router.post(
+
+    "/batch_predict",
+
+    response_model=
+    List[
+        BatchPredictionResponse
+    ]
+)
+def batch_predict_risk(
+
+    shipments:
+    List[
+        ShipmentInput
+    ]
+):
+
+    shipment_dicts = [
+
+        shipment.model_dump()
+
+        for shipment
+
+        in shipments
+    ]
+
+    results = (
+
+        model_service
+        .batch_predict(
+
+            shipment_dicts
+        )
+    )
+
+    response = []
+
+    for shipment, result in zip(
+
+        shipments,
+
+        results
+    ):
+
+        response.append({
+
+            "container_id":
+            shipment.Container_ID,
+
+            **result
+        })
+
+    return response

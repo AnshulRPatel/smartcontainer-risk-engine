@@ -83,3 +83,9 @@ class ModelInfoResponse(BaseModel):
     features_count: int
 
     features: list[str]
+
+class BatchPredictionResponse(
+    PredictionResponse
+):
+
+    pass
