@@ -49,3 +49,37 @@ class PredictionResponse(BaseModel):
     anomaly_score: float
 
     explanation: str
+
+class HealthResponse(BaseModel):
+
+    status: str
+
+    service: str
+
+    api_version: str
+
+    timestamp: str
+
+    model_loaded: bool
+
+class ReadyResponse(BaseModel):
+
+    ready: bool
+
+class ModelInfoResponse(BaseModel):
+
+    model_name: str
+
+    model_version: str
+
+    api_version: str
+
+    framework: str
+
+    task: str
+
+    target_classes: list[str]
+
+    features_count: int
+
+    features: list[str]
