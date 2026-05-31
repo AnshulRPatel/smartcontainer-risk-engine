@@ -375,3 +375,24 @@ def batch_predict_csv(
         media_type=
         "text/csv"
     )
+
+@router.get(
+    "/download_template"
+)
+def download_template():
+
+    template_path = (
+        "templates/"
+        "shipment_template.csv"
+    )
+
+    return FileResponse(
+
+        path=template_path,
+
+        filename=
+        "shipment_template.csv",
+
+        media_type=
+        "text/csv"
+    )
