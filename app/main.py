@@ -27,6 +27,10 @@ from app.routers import (
     explain
 )
 
+from app.routers import (
+    monitoring
+)
+
 settings = get_settings()
 
 configure_logging()
@@ -83,4 +87,8 @@ app.include_router(
 
 app.include_router(
     explain.router
+)
+
+app.include_router(
+    monitoring.router
 )

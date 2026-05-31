@@ -30,6 +30,9 @@ from app.services.model_service import (
     model_service
 )
 
+from app.services.monitoring_service import (
+    monitoring_service
+)
 
 router = APIRouter()
 
@@ -54,6 +57,13 @@ def predict_risk(
         model_service.predict(
             shipment.model_dump()
         )
+    )
+
+    monitoring_service.log_prediction(
+
+    shipment.Container_ID,
+
+    result
     )
 
     return {
@@ -140,6 +150,13 @@ def batch_predict_risk(
 
         results
     ):
+
+        monitoring_service.log_prediction(
+
+        shipment.Container_ID,
+
+        result
+        )
 
         response.append({
 
@@ -315,6 +332,15 @@ def batch_predict_csv(
 
         results
     ):
+
+        monitoring_service.log_prediction(
+
+        shipment[
+            "Container_ID"
+        ],
+
+        result
+    )
 
         output_rows.append({
 
