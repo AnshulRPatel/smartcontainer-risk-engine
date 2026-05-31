@@ -89,3 +89,34 @@ class BatchPredictionResponse(
 ):
 
     pass
+
+class RiskFactor(
+    BaseModel
+):
+
+    factor: str
+
+    value: float | str
+
+
+class ExplanationResponse(
+    BaseModel
+):
+
+    container_id: str
+
+    predicted_risk: str
+
+    risk_label: str
+
+    model_confidence: float
+
+    risk_score: float
+
+    anomaly_score: float
+
+    explanation: str
+
+    top_risk_factors: list[
+        RiskFactor
+    ]

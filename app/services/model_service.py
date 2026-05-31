@@ -307,6 +307,46 @@ class ModelService:
         }
 
     # =====================================================
+    # EXPLAINABILITY
+    # =====================================================
+
+    def explain(
+
+        self,
+
+        shipment
+    ):
+
+        raw_df = pd.DataFrame(
+            [shipment]
+        )
+
+        processed_df = (
+            prepare_inference_data(
+
+                raw_df,
+
+                context_service=
+                context_service
+            )
+        )
+
+        prediction = (
+            self.predict(
+                shipment
+            )
+        )
+
+        return {
+
+            "prediction":
+            prediction,
+
+            "processed_df":
+            processed_df
+        }
+
+    # =====================================================
     # BATCH PREDICTION
     # =====================================================
 

@@ -23,6 +23,10 @@ from app.routers import (
     model_info
 )
 
+from app.routers import (
+    explain
+)
+
 settings = get_settings()
 
 configure_logging()
@@ -75,4 +79,8 @@ app.include_router(
 
 app.include_router(
     model_info.router
+)
+
+app.include_router(
+    explain.router
 )
