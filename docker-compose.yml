@@ -1,0 +1,13 @@
+services:
+
+  smartcontainer-risk-engine:
+
+    build: .
+
+    container_name:
+      smartcontainer-risk-engine
+
+    ports:
+      - "8000:8000"
+
+    restart: unless-stopped
