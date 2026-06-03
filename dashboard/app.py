@@ -31,6 +31,10 @@ from pages.importer_exporter_profiles import (
     render_importer_exporter_profiles
 )
 
+from pages.live_prediction import (
+    render_live_prediction
+)
+
 # =========================
 # PAGE CONFIG
 # =========================
@@ -84,7 +88,9 @@ page = st.sidebar.radio(
 
         "Behavioral Intelligence",
 
-        "Explainability Center"
+        "Explainability Center",
+
+        "Live Prediction"
     ]
 )
 
@@ -140,3 +146,7 @@ elif page == "Behavioral Intelligence":
     render_importer_exporter_profiles(
         filtered_df
     )
+
+elif page == "Live Prediction":
+
+    render_live_prediction()    
