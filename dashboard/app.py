@@ -35,6 +35,10 @@ from pages.live_prediction import (
     render_live_prediction
 )
 
+from pages.batch_intelligence import (
+    render_batch_intelligence
+)
+
 # =========================
 # PAGE CONFIG
 # =========================
@@ -90,7 +94,9 @@ page = st.sidebar.radio(
 
         "Explainability Center",
 
-        "Live Prediction"
+        "Live Prediction",
+
+        "Batch Intelligence Center"
     ]
 )
 
@@ -149,4 +155,10 @@ elif page == "Behavioral Intelligence":
 
 elif page == "Live Prediction":
 
-    render_live_prediction()    
+    render_live_prediction()
+
+elif page == (
+    "Batch Intelligence Center"
+):
+
+    render_batch_intelligence()        
