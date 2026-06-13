@@ -14,7 +14,7 @@ class ContextService:
         # =================================================
 
         self.reference_data = pd.read_csv(
-            "data/processed/anomaly_shipments.csv"
+            "data/processed/anomaly_shipments_reference.csv"
         )
 
         # =================================================

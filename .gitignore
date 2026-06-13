@@ -340,3 +340,11 @@ Thumbs.db
 !outputs/artifacts/
 !outputs/artifacts/risk_thresholds.json
 !outputs/artifacts/risk_label_thresholds.json
+
+# =====================================
+# REFERENCE DATA FOR CONTEXT SERVICE
+# =====================================
+
+!data/
+!data/processed/
+!data/processed/anomaly_shipments_reference.csv
