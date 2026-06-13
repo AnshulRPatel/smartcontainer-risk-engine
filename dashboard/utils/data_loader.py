@@ -7,7 +7,7 @@ import streamlit as st
 def load_dashboard_data():
 
     shipments = pd.read_csv(
-        "data/processed/anomaly_shipments.csv"
+        "data/processed/anomaly_shipments_reference.csv"
     )
 
     explanations = pd.read_csv(
