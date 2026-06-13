@@ -348,3 +348,10 @@ Thumbs.db
 !data/
 !data/processed/
 !data/processed/anomaly_shipments_reference.csv
+
+# =====================================
+# DASHBOARD REFERENCE REPORTS
+# =====================================
+
+!outputs/reports/
+!outputs/reports/prediction_explanations_reference.csv

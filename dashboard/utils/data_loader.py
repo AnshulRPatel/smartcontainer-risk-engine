@@ -11,7 +11,7 @@ def load_dashboard_data():
     )
 
     explanations = pd.read_csv(
-        "outputs/reports/prediction_explanations.csv"
+        "outputs/reports/prediction_explanations_reference.csv"
     )
 
     merged = shipments.merge(
