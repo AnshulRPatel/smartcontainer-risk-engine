@@ -1,6 +1,6 @@
 import streamlit as st
 
-from components.queue_table import (
+from dashboard.components.queue_table import (
     render_critical_queue
 )
 

@@ -1,41 +1,41 @@
 import streamlit as st
 
-from utils.data_loader import (
+from dashboard.utils.data_loader import (
     load_dashboard_data
 )
 
-from utils.metrics import (
+from dashboard.utils.metrics import (
     compute_dashboard_metrics
 )
 
-from components.sidebar_filters import (
+from dashboard.components.sidebar_filters import (
     render_sidebar_filters
 )
 
-from pages.executive_overview import (
+from dashboard.pages.executive_overview import (
     render_executive_overview
 )
 
-from pages.operational_queue import (
+from dashboard.pages.operational_queue import (
     render_operational_queue
 )
 
-from pages.anomaly_intelligence import (
+from dashboard.pages.anomaly_intelligence import (
     render_anomaly_intelligence
 )
 
-from pages.explainability_center import (
+from dashboard.pages.explainability_center import (
     render_explainability_center
 )
-from pages.importer_exporter_profiles import (
+from dashboard.pages.importer_exporter_profiles import (
     render_importer_exporter_profiles
 )
 
-from pages.live_prediction import (
+from dashboard.pages.live_prediction import (
     render_live_prediction
 )
 
-from pages.batch_intelligence import (
+from dashboard.pages.batch_intelligence import (
     render_batch_intelligence
 )
 

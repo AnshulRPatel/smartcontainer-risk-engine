@@ -1,10 +1,10 @@
 import streamlit as st
 
-from components.kpi_cards import (
+from dashboard.components.kpi_cards import (
     render_kpi_cards
 )
 
-from components.risk_charts import (
+from dashboard.components.risk_charts import (
 
     render_risk_distribution,
 

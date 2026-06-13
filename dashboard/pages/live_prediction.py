@@ -1,6 +1,6 @@
 import streamlit as st
 
-from utils.api_client import (
+from dashboard.utils.api_client import (
     predict_shipment,
 
     explain_shipment

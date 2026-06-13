@@ -6,7 +6,7 @@ import plotly.express as px
 
 import streamlit as st
 
-from utils.batch_api_client import (
+from dashboard.utils.batch_api_client import (
     batch_predict_csv
 )
 
