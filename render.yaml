@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: smartcontainer-risk-engine-api
+
+    runtime: docker
+
+    plan: free
+
+    autoDeploy: true
+
+    branch: main
+
+    dockerfilePath: ./Dockerfile
+
+    healthCheckPath: /health
+
