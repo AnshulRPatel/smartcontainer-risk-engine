@@ -327,3 +327,16 @@ outputs/
 # OS
 .DS_Store
 Thumbs.db
+
+# =====================================
+# REQUIRED PRODUCTION MODEL ARTIFACTS
+# =====================================
+
+!outputs/
+!outputs/models/
+!outputs/models/isolation_forest.pkl
+!outputs/models/catboost_risk_model.cbm
+
+!outputs/artifacts/
+!outputs/artifacts/risk_thresholds.json
+!outputs/artifacts/risk_label_thresholds.json

@@ -1,0 +1,6 @@
+{
+    "value_threshold_95": 11247488.0,
+    "value_threshold_99": 44379180.0,
+    "dwell_threshold_95": 97.9,
+    "importer_threshold_10": 2.0
+}
