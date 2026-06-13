@@ -355,3 +355,42 @@ Thumbs.db
 
 !outputs/reports/
 !outputs/reports/prediction_explanations_reference.csv
+
+```gitignore
+# =====================================
+# PRODUCTION REFERENCE FILES
+# =====================================
+
+!outputs/
+!outputs/models/
+!outputs/models/isolation_forest.pkl
+!outputs/models/catboost_risk_model.cbm
+
+!outputs/artifacts/
+!outputs/artifacts/risk_thresholds.json
+!outputs/artifacts/risk_label_thresholds.json
+
+!outputs/reports/
+!outputs/reports/prediction_explanations_reference.csv
+
+!data/
+!data/processed/
+!data/processed/anomaly_shipments_reference.csv
+
+# =====================================
+# IGNORE GENERATED OUTPUTS
+# =====================================
+
+outputs/predictions/
+outputs/errors/
+outputs/monitoring/
+
+outputs/reports/classification_report.txt
+outputs/reports/prediction_explanations.csv
+outputs/reports/train_api_parity_validation.csv
+
+data/processed/anomaly_shipments.csv
+data/processed/cleaned_shipments.csv
+data/processed/featured_shipments.csv
+data/processed/labeled_shipments.csv
+```

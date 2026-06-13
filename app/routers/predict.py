@@ -34,6 +34,13 @@ from app.services.monitoring_service import (
     monitoring_service
 )
 
+
+from app.services.schema_service import (
+    schema_service
+)
+
+
+
 router = APIRouter()
 
 
@@ -220,72 +227,37 @@ def batch_predict_csv(
         print("\n========== CSV COLUMNS ==========\n")
         print(df.columns.tolist())
 
+        
         # ==========================================
-        # NORMALIZE TEMPLATE COLUMN NAMES
+        # APPLY SCHEMA VALIDATION PIPELINE
         # ==========================================
 
-        df = df.rename(
-            columns={
+        validation_result = (
 
-                "Declaration_Date (YYYY-MM-DD)":
-                "Declaration_Date",
-
-                "Trade_Regime (Import / Export / Transit)":
-                "Trade_Regime"
-            }
+            schema_service
+            .validate_and_clean(df)
         )
 
-        required_columns = [
-
-            "Container_ID",
-
-            "Declaration_Date",
-
-            "Declaration_Time",
-
-            "Trade_Regime",
-
-            "Origin_Country",
-
-            "Destination_Port",
-
-            "Destination_Country",
-
-            "HS_Code",
-
-            "Importer_ID",
-
-            "Exporter_ID",
-
-            "Declared_Value",
-
-            "Declared_Weight",
-
-            "Measured_Weight",
-
-            "Shipping_Line",
-
-            "Dwell_Time_Hours"
+        df = validation_result[
+            "clean_df"
         ]
 
-        missing_columns = [
-
-            col
-
-            for col in required_columns
-
-            if col not in df.columns
+        removed_rows = validation_result[
+            "removed_rows"
         ]
 
-        if missing_columns:
+        
+        failed_df = validation_result[
+            "failed_df"
+        ]
 
-            raise HTTPException(
 
-                status_code=400,
+        print(
+            f"\nRemoved invalid rows: "
+            f"{removed_rows}"
+        )
+        
 
-                detail=
-                f"Missing required columns: {missing_columns}"
-            )
 
     except Exception as e:
 
@@ -353,6 +325,57 @@ def batch_predict_csv(
         output_rows
     )
 
+    
+    # ==========================================
+    # INGESTION METRICS
+    # ==========================================
+
+    total_uploaded_rows = (
+
+        len(df) + removed_rows
+    )
+
+    successful_rows = len(df)
+
+    failed_rows_count = removed_rows
+
+    success_rate = round(
+
+        (successful_rows / total_uploaded_rows)
+        * 100,
+
+        2
+    )
+    
+    # ==========================================
+    # SAVE FAILED ROWS REPORT
+    # ==========================================
+
+    os.makedirs(
+
+        "outputs/errors",
+
+        exist_ok=True
+    )
+
+    error_file_id = (
+        uuid4().hex
+    )
+
+    error_output_path = (
+
+        f"outputs/errors/"
+        f"failed_rows_"
+        f"{error_file_id}.csv"
+    )
+
+    failed_df.to_csv(
+
+        error_output_path,
+
+        index=False
+    )
+    
     # ==========================================
     # CREATE OUTPUT DIRECTORY
     # ==========================================
@@ -379,6 +402,22 @@ def batch_predict_csv(
         f"{file_id}.csv"
     )
 
+    output_df[
+        "Total_Uploaded_Rows"
+    ] = total_uploaded_rows
+
+    output_df[
+        "Successful_Rows"
+    ] = successful_rows
+
+    output_df[
+        "Failed_Rows"
+    ] = failed_rows_count
+
+    output_df[
+        "Success_Rate_Percent"
+    ] = success_rate
+    
     output_df.to_csv(
 
         output_path,

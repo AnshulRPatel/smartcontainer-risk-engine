@@ -78,6 +78,20 @@ def render_batch_intelligence():
                     result_df
                 )
 
+                failed_rows = int(
+
+                    result_df[
+                        "Failed_Rows"
+                    ].iloc[0]
+                )
+
+                success_rate = float(
+
+                    result_df[
+                        "Success_Rate_Percent"
+                    ].iloc[0]
+                )
+                
                 critical_count = (
 
                     result_df[
@@ -108,8 +122,8 @@ def render_batch_intelligence():
 
                 ).sum()
 
-                col1, col2, col3, col4 = (
-                    st.columns(4)
+                col1, col2, col3, col4, col5, col6 = (
+                    st.columns(6)
                 )
 
                 with col1:
@@ -140,6 +154,20 @@ def render_batch_intelligence():
                         low_count
                     )
 
+                with col5:
+
+                    st.metric(
+                        "Failed Rows",
+                        failed_rows
+                    )
+
+                with col6:
+
+                    st.metric(
+                        "Success Rate %",
+                        success_rate
+                    )
+                
                 st.divider()
 
                 # ==========================
