@@ -55,6 +55,8 @@ jobs:
 
           pip install -r requirements-api.txt
 
+          pip install -r requirements-dashboard.txt
+
 
       # ==========================
       # VALIDATE FASTAPI IMPORTS
