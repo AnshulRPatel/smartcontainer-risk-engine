@@ -2,7 +2,7 @@ import requests
 
 
 API_URL = (
-    "http://localhost:8000"
+    "https://smartcontainer-risk-engine-api.onrender.com"
 )
 
 
