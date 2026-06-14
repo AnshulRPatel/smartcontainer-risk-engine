@@ -90,7 +90,13 @@ class SchemaService:
             "Exporter_ID",
 
             "hscode":
-            "HS_Code"
+            "HS_Code",
+
+            "declarationdateyyyymmdd":
+            "Declaration_Date",
+
+            "traderegimeimportexporttransit":
+            "Trade_Regime",
         }
 
     # =============================================
