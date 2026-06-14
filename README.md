@@ -11,7 +11,7 @@ SmartContainer Risk Engine is an end-to-end ML system that helps customs and tra
 | Resource | Link |
 |---|---|
 | 🖥️ Streamlit Dashboard | [smartcontainer-risk-engine.streamlit.app](https://smartcontainer-risk-engine-fz4vxkakst8qlg9e8uye7m.streamlit.app/) |
-| ⚙️ Prediction API (FastAPI on Render) | [smartcontainer-risk-engine-api.onrender.com](https://smartcontainer-risk-engine-api.onrender.com) |
+| ⚙️ Prediction API (FastAPI on Render) | [smartcontainer-risk-engine-api.onrender.com](https://smartcontainer-risk-engine-api.onrender.com/docs) |
 | 📦 Source code | [AnshulRPatel/smartcontainer-risk-engine](https://github.com/AnshulRPatel/smartcontainer-risk-engine) |
 
 > ⚠️ The API is hosted on Render's free tier, so the first request after a period of inactivity may take a few extra seconds while the service spins up.
