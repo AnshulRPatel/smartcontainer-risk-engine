@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 
 import streamlit as st
@@ -9,24 +11,101 @@ def render_explainability_center():
         "Explainability Center"
     )
 
+    # ==========================================
+    # FILE PATHS
+    # ==========================================
+
+    explanations_path = (
+        "outputs/reports/"
+        "prediction_explanations_reference.csv"
+    )
+
+    shap_values_path = (
+        "outputs/metrics/"
+        "local_shap_values.csv"
+    )
+
+    shap_summary_path = (
+        "outputs/plots/shap/"
+        "shap_summary.png"
+    )
+
+    shap_bar_path = (
+        "outputs/plots/shap/"
+        "shap_bar.png"
+    )
+
+    # ==========================================
+    # VALIDATE REQUIRED FILES
+    # ==========================================
+
+    required_files = [
+        explanations_path,
+        shap_values_path,
+        shap_summary_path,
+        shap_bar_path
+    ]
+
+    missing_files = [
+
+        file_path
+
+        for file_path in required_files
+
+        if not os.path.exists(file_path)
+    ]
+
+    # ==========================================
+    # HANDLE MISSING FILES
+    # ==========================================
+
+    if missing_files:
+
+        st.warning(
+            """
+            Explainability artifacts are not available yet.
+
+            Please run:
+            - Live Prediction
+            OR
+            - Batch Intelligence
+
+            to generate SHAP explanations and reports.
+            """
+        )
+
+        st.subheader(
+            "Missing Files"
+        )
+
+        for file_path in missing_files:
+
+            st.code(file_path)
+
+        return
+
+    # ==========================================
+    # LOAD DATA
+    # ==========================================
+
     explanations = pd.read_csv(
-        "outputs/reports/prediction_explanations.csv"
+        explanations_path
     )
 
     shap_values = pd.read_csv(
-        "outputs/metrics/local_shap_values.csv"
+        shap_values_path
     )
 
-    # =========================
+    # ==========================================
     # GLOBAL EXPLAINABILITY
-    # =========================
+    # ==========================================
 
     st.subheader(
         "Global SHAP Summary"
     )
 
     st.image(
-        "outputs/plots/shap/shap_summary.png"
+        shap_summary_path
     )
 
     st.subheader(
@@ -34,14 +113,14 @@ def render_explainability_center():
     )
 
     st.image(
-        "outputs/plots/shap/shap_bar.png"
+        shap_bar_path
     )
 
     st.divider()
 
-    # =========================
+    # ==========================================
     # LOCAL EXPLAINABILITY
-    # =========================
+    # ==========================================
 
     st.subheader(
         "Shipment-Level Explanation"
@@ -74,6 +153,7 @@ def render_explainability_center():
         ]
 
         if len(local_exp) > 0 and len(local_shap) > 0:
+
             st.markdown(
 
                 f"""
@@ -128,7 +208,8 @@ def render_explainability_center():
         else:
 
             st.warning(
-                 "Container ID does not exist or "
-                 "local SHAP explanation "
-                 "is unavailable for this shipment."
+                "Container ID does not exist or "
+                "local SHAP explanation "
+                "is unavailable for this shipment."
             )
+
