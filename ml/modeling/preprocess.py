@@ -349,17 +349,7 @@ def prepare_inference_data(
 
     ).astype(int)
 
-    print("\n========== TEMPORAL DEBUG ==========\n")
-
-    print(
-        inference_df[
-            [
-                "Declaration_Hour",
-                "Is_Night_Declaration"
-            ]
-        ]
-    )
-
+   
     # =====================================================
     # WEIGHT FEATURES
     # =====================================================

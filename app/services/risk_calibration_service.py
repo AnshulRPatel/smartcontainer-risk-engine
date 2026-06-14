@@ -55,14 +55,6 @@ class RiskCalibrationService:
             ]
         )
 
-        print(
-            "\nLoaded Risk Thresholds:"
-        )
-
-        print(
-            thresholds
-        )
-
     # ==============================================
     # MAIN RISK CALCULATION
     # ==============================================
