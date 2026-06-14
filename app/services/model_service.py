@@ -70,9 +70,7 @@ class ModelService:
                 context_service
             )
         )
-        print("\n========== API FEATURE MATRIX ==========\n")
-
-        print(processed_df.T)
+        
         # ================================================
         # MODEL PREDICTION
         # ================================================
@@ -84,22 +82,12 @@ class ModelService:
             )[0]
         )
 
-        print("\n========== MODEL DEBUG ==========\n")
-
-        print("Raw Prediction:")
-        print(prediction)
-
-        
-
         probabilities = (
 
             self.model.predict_proba(
                 processed_df
             )[0]
         )
-
-        print("\nPrediction Probabilities:")
-        print(probabilities)
 
         model_confidence = float(
         max(probabilities)
@@ -114,9 +102,6 @@ class ModelService:
                 prediction
             )
         )
-
-        print("\nDecoded Risk:")
-        print(decoded_risk)
 
         # ================================================
         # ANOMALY SCORE
